@@ -43,3 +43,18 @@ async def get_books_by_author_and_category(author: str, category: str):
 @app.post("/books/create_book")
 async def create_book(new_book:Book):
     BOOKS.append(new_book)
+    return BOOKS
+    
+@app.put("/books/update_book")
+async def update_book(updated_book:Book):
+    for (i,book) in enumerate(BOOKS):
+        if BOOKS[i].get("Title").casefold()==updated_book.Title.casefold():
+            BOOKS[i]=updated_book
+        break
+
+@app.delete("/books/delete_book/{title}")
+async def delete_book(title: str):
+    for (i,book) in enumerate(BOOKS):
+        if BOOKS[i].get("Title").casefold()==title.casefold():
+            del BOOKS[i]
+            break
