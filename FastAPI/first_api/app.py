@@ -4,12 +4,29 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-BOOKS = [{"Title": "Rachel Wilkerson", "Author": "Raya Burton", "Genre": "Action"}, {"Title": "Libby Hardy", "Author": "Caldwell Burch", "Genre": "Action"}, {"Title": "Lana Whitehead","Author": "Beau Solomon", "Genre": "Adventure"}, {"Title": "Naomi Murray", "Author": "Adam Ayala", "Genre": "Adventure"}, {"Title": "Tamekah Dunlap", "Author": "Haviva Roy", "Genre": "Adventure"}]
+
 
 class Book(BaseModel):
-    Title:str
-    Author:str
-    Genre:str
+    "Class for book"
+    id:int
+    title:str
+    author:str
+    genre:str
+    description:str
+    rating:int
+
+    def __init__(self,id, title, author, genre, description, rating):
+        super().__init__(id=id, title=title, author=author, genre=genre, description= description, rating=rating)
+        # self.id=id
+        # self.title=title
+        # self.author=author
+        # self.genre=genre
+        # self.description=description
+        # self.rating=rating
+        
+
+BOOKS = [Book(1,"Python", "John Doe", "Python", "Python is the best language in the world",5),Book(2,"JavaScript", "John Doe", "JavaScript", "JavaScript is the best language in the",4),Book(3,"C++", "John Doe", "C++", "C plus plus is the best language in the world",3),Book(4,"C#", "John Doe", "C#", "C# is the best language in the world",3)]
+
 
 @app.get("/")
 async def home():
@@ -42,7 +59,8 @@ async def get_books_by_author_and_category(author: str, category: str):
 
 @app.post("/books/create_book")
 async def create_book(new_book:Book):
-    BOOKS.append(new_book)
+    book=Book(**new_book.dict())
+    BOOKS.append(book)
     return BOOKS
     
 @app.put("/books/update_book")
